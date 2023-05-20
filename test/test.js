@@ -217,8 +217,48 @@ describe('bin-pack with maxWidth option', function() {
 		assert.equal(result.items.length, bins.length, "Result has same amount of items as the source");
 		verifyResult(result, result.items);
 	})
+})
 
-	describe('with strictMax: true', function() {
-		it('rejects bins that exceed the maximum')
+describe('with strictMax: true', function() {
+	it('packs items that exceed the maximum width at the left edge', function() {
+		var bins = [
+			{ width: 100, height: 10 },
+			{ width: 110, height: 10 },
+		];
+
+		var result = pack(bins, {maxWidth: 90, strictMax: true});
+		assert.ok('items' in result, "Result has items");
+		assert.equal(result.items.length, bins.length, "Result has same amount of items as the source");
+		assert.ok(result.width === 110, 'Width is that of the widest item')
+		verifyResult(result, result.items);
 	})
+
+	it('does not unnecessarily pack items to exceed the maximum width', function() {
+		var bins = [
+			{ width: 10,  height: 110 },
+			{ width: 10,  height: 110 },
+			{ width: 10,  height: 110 },
+			{ width: 40,  height: 48 },
+			{ width: 40,  height: 48 },
+			{ width: 40,  height: 48 },
+			{ width: 50,  height: 48 },
+			{ width: 50,  height: 48 },
+			{ width: 50,  height: 48 },
+			{ width: 60,  height: 48 },
+			{ width: 60,  height: 48 },
+			{ width: 70,  height: 48 },
+			{ width: 70,  height: 48 },
+			{ width: 30,  height: 48 },
+			{ width: 30,  height: 48 },
+			{ width: 30,  height: 48 },
+		];
+
+		var result = pack(bins, {maxWidth: 60, strictMax: true});
+		assert.ok('items' in result, "Result has items");
+		assert.equal(result.items.length, bins.length, "Result has same amount of items as the source");
+		assert.ok(result.width === 70, 'Width is that of the widest item')
+		verifyResult(result, result.items);
+	})
+
+	it('rejects bins that exceed the maximum')
 })

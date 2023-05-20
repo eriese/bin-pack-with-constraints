@@ -1,6 +1,6 @@
 {
   "name": "bin-pack-with-constraints",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A packing algorithm for 2D bin packing that allows setting a max width or height. Largely based on code and a blog post by Jake Gordon and Bryan Burgers.",
   "author": {
     "name": "Enoch Riese",

@@ -33,7 +33,8 @@ Construction:
 	{
 		maxWidth = Infinity: set a max width to constrain the growth in that direction
 		maxHeight = Infinity: set a max height to constrain the growth in that direction
-		TODO strictMax = false: reject blocks that are larger than the max
+		strictMax = false: require wider-than-max blocks to start at left boundary
+		PREVIOUS INTENDED TODO strictMax = false: reject blocks that are larger than the max
 	}
 
 Inputs:
@@ -76,7 +77,7 @@ Example:
 var GrowingPacker = function({maxWidth = Infinity, maxHeight = Infinity, strictMax = false}) {
 	this.maxWidth = maxWidth
 	this.maxHeight = maxHeight
-	// this.strictMax = strictMax
+	this.strictMax = strictMax
 	this.ensureSquare = maxWidth === Infinity && maxHeight === Infinity
 };
 
@@ -87,7 +88,10 @@ GrowingPacker.prototype = {
 		if (len === 0) { return }
 
 		var n, node, block, fit;
-		var width  = this.strictMax && (this.maxWidth < Infinity) ? this.maxWidth : blocks[0].width;
+		// Require wider-than-max blocks to start at the left boundary, so
+		// they encroach past the right boundary minimally.
+		var width  = this.strictMax && (this.maxWidth < Infinity) ? Math.max(blocks[0].width, this.maxWidth) : blocks[0].width;
+
 		var height  = this.strictMax && (this.maxHeight < Infinity) ? this.maxHeight : blocks[0].height;
 		this.root = { x: 0, y: 0, width, height };
 		for (n = 0; n < len ; n++) {
